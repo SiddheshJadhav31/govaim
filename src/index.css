@@ -53,3 +53,28 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Glassmorphism */
+.glass {
+  @apply bg-white/70 backdrop-blur-xl border border-white/20;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-[#00B4D8] to-[#023E8A] bg-clip-text text-transparent;
+}
+
+/* Hover Effects */
+.hover-lift {
+  @apply transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-lg;
+}
+
+/* Button Animation */
+.btn-animate {
+  @apply transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-95;
+}
+
+/* Card Animation */
+.card-animate {
+  @apply transform transition-all duration-300 hover:scale-[1.01] hover:shadow-xl;
+}
