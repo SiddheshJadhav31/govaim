@@ -11,6 +11,16 @@ function App() {
     <Router>
       <div className="min-h-screen">
         <Routes>
+          {/* Default Route to Dashboard */}
+          <Route path="/" element={
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <main className="flex-1 p-8 bg-workspace">
+                <Dashboard />
+              </main>
+            </div>
+          } />
+
           {/* Auth Routes */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register/*" element={<Register />} />
@@ -41,8 +51,8 @@ function App() {
             </div>
           } />
           
-          {/* Default Route */}
-          <Route path="*" element={<Navigate to="/auth/login" replace />} />
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
