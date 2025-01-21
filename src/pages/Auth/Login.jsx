@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [error, setError] = React.useState('');
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,10 +28,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C]">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-primary animate-fade-in">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-card mx-4">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-[#1A1F2C]">Welcome Back</h2>
+          <h1 className="text-4xl font-bold text-primary">GovAim</h1>
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
           <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
 
@@ -31,38 +45,51 @@ const Login = () => {
           
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
               </label>
               <Input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
-                className="mt-1"
-                placeholder="Enter your username"
+                value={formData.email}
+                onChange={handleChange}
+                className="form-input mt-1"
+                placeholder="Enter your email"
               />
             </div>
 
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="mt-1"
-                placeholder="Enter your password"
-              />
+              <div className="relative mt-1">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-input pr-10"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
           </div>
 
           <div>
             <Button 
               type="submit" 
-              className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+              className="w-full bg-secondary hover:bg-secondary-dark text-white font-medium py-3 rounded-lg transition-colors"
             >
               Sign in
             </Button>
@@ -74,7 +101,7 @@ const Login = () => {
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/auth/register')}
-              className="font-medium text-[#9b87f5] hover:text-[#7E69AB]"
+              className="font-medium text-secondary hover:text-secondary-dark transition-colors"
             >
               Sign up
             </button>

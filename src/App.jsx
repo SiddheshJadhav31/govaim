@@ -12,7 +12,7 @@ function App() {
     <Router>
       <div className="min-h-screen">
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Navigate to="/auth/login" replace />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/app/*" element={<AppLayout />} />
@@ -27,7 +27,7 @@ function AppLayout() {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 p-8 bg-gray-50">
+      <main className="flex-1 p-8 bg-workspace">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/legislative" element={<LegislativeTracker />} />

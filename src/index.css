@@ -5,31 +5,51 @@
 @tailwind utilities;
 
 :root {
-  --primary: #1a365d;
-  --secondary: #2c7a7b;
-  --accent: #d4af37;
+  --primary: #4A154B;
+  --secondary: #36C5F0;
+  --accent: #ECB22E;
+  --workspace: #F7F7F8;
 }
 
 body {
-  @apply bg-gray-50 text-gray-800 font-sans;
+  @apply bg-workspace text-gray-800 font-sans antialiased;
 }
 
 .nav-link {
-  @apply flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-primary-light hover:text-white rounded-lg transition-all;
+  @apply flex items-center gap-2 px-4 py-2 text-gray-100 hover:bg-nav-hover rounded-lg transition-all;
 }
 
 .nav-link.active {
-  @apply bg-primary text-white;
+  @apply bg-nav-hover font-medium;
 }
 
-.card {
-  @apply bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow;
+.form-input {
+  @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition-all;
 }
 
 .btn-primary {
-  @apply bg-primary hover:bg-primary-dark text-white font-medium px-6 py-2 rounded-lg transition-colors;
+  @apply bg-secondary hover:bg-secondary-dark text-white font-medium px-6 py-2 rounded-lg transition-colors;
 }
 
 .btn-secondary {
-  @apply bg-secondary hover:bg-secondary-dark text-white font-medium px-6 py-2 rounded-lg transition-colors;
+  @apply bg-primary hover:bg-primary-dark text-white font-medium px-6 py-2 rounded-lg transition-colors;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
