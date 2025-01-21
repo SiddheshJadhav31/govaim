@@ -47,10 +47,19 @@ const Register = () => {
       setCurrentStep(currentStep + 1);
       toast.success("Step completed successfully!");
     } else {
-      // Here you would typically handle the registration
-      console.log('Registration data:', formData);
-      toast.success("Registration successful! Redirecting to dashboard...");
-      setTimeout(() => navigate('/dashboard'), 1500);
+      try {
+        // Here you would typically handle the registration with your backend
+        console.log('Registration data:', formData);
+        toast.success("Registration successful! Redirecting to dashboard...");
+        
+        // Add a small delay to show the success message before redirecting
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1500);
+      } catch (err) {
+        setError('Registration failed. Please try again.');
+        toast.error("Registration failed. Please try again.");
+      }
     }
   };
 
