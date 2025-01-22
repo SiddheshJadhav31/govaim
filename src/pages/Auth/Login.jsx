@@ -10,15 +10,15 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // This is where we'll add authentication logic later
-    navigate('/auth/register');
+    // Here you would typically handle authentication
+    navigate('/dashboard');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C]">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">GovAim</h2>
+          <h2 className="mt-6 text-3xl font-bold text-[#1A1F2C]">Welcome Back</h2>
           <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
 
@@ -60,7 +60,10 @@ const Login = () => {
           </div>
 
           <div>
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+            >
               Sign in
             </Button>
           </div>
@@ -71,7 +74,7 @@ const Login = () => {
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/auth/register')}
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-[#9b87f5] hover:text-[#7E69AB]"
             >
               Sign up
             </button>
