@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import LegislativeTracker from './pages/LegislativeTracker';
 import StakeholderNetwork from './pages/StakeholderNetwork';
+import Landing from './pages/Landing';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 
@@ -11,51 +12,29 @@ function App() {
     <Router>
       <div className="min-h-screen">
         <Routes>
-          {/* Default Route to Dashboard */}
-          <Route path="/" element={
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <main className="flex-1 p-8 bg-workspace">
-                <Dashboard />
-              </main>
-            </div>
-          } />
-
-          {/* Auth Routes */}
+          <Route path="/" element={<Landing />} />
           <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/register/*" element={<Register />} />
-          
-          {/* App Routes with Sidebar */}
-          <Route path="/dashboard" element={
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <main className="flex-1 p-8 bg-workspace">
-                <Dashboard />
-              </main>
-            </div>
-          } />
-          <Route path="/legislative" element={
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <main className="flex-1 p-8 bg-workspace">
-                <LegislativeTracker />
-              </main>
-            </div>
-          } />
-          <Route path="/network" element={
-            <div className="flex min-h-screen">
-              <Sidebar />
-              <main className="flex-1 p-8 bg-workspace">
-                <StakeholderNetwork />
-              </main>
-            </div>
-          } />
-          
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/auth/register" element={<Register />} />
+          <Route path="/app/*" element={<AppLayout />} />
         </Routes>
       </div>
     </Router>
+  );
+}
+
+function AppLayout() {
+  // This is where we'll add authentication check later
+  return (
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <main className="flex-1 p-8 bg-gray-50">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/legislative" element={<LegislativeTracker />} />
+          <Route path="/network" element={<StakeholderNetwork />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

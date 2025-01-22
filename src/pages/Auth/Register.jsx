@@ -3,43 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Register = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    country: '',
-    idType: '',
-    idDocument: null,
-    username: '',
-    password: '',
-  });
   const [error, setError] = useState('');
-
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: files ? files[0] : value
-    }));
-  };
-
-  const handleSelectChange = (name, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Here you would typically send the data to your backend
-      console.log('Registration data:', formData);
-      navigate('/dashboard');
+      // This is where we'll add registration logic later
+      navigate('/app');
     }
   };
 
@@ -49,20 +25,30 @@ const Register = () => {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Select Your Country
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username
               </label>
-              <Select name="country" onValueChange={(value) => handleSelectChange('country', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="uk">United Kingdom</SelectItem>
-                  <SelectItem value="ca">Canada</SelectItem>
-                  <SelectItem value="au">Australia</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="mt-1"
+                placeholder="Choose a username"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="mt-1"
+                placeholder="Choose a password"
+              />
             </div>
           </div>
         );
@@ -70,30 +56,21 @@ const Register = () => {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                ID Verification
+              <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                Country
               </label>
-              <Select name="idType" onValueChange={(value) => handleSelectChange('idType', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select ID type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="passport">Passport</SelectItem>
-                  <SelectItem value="driving_license">Driving License</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload ID Document
-              </label>
-              <Input
-                type="file"
-                name="idDocument"
-                onChange={handleInputChange}
-                accept="image/*,.pdf"
-                className="mt-1"
-              />
+              <select
+                id="country"
+                name="country"
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              >
+                <option value="">Select your country</option>
+                <option value="US">United States</option>
+                <option value="UK">United Kingdom</option>
+                <option value="CA">Canada</option>
+                {/* Add more countries as needed */}
+              </select>
             </div>
           </div>
         );
@@ -101,29 +78,31 @@ const Register = () => {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username
+              <label htmlFor="idType" className="block text-sm font-medium text-gray-700">
+                ID Type
               </label>
-              <Input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                className="mt-1"
-                placeholder="Choose a username"
-              />
+              <select
+                id="idType"
+                name="idType"
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              >
+                <option value="">Select ID type</option>
+                <option value="passport">Passport</option>
+                <option value="driving_license">Driving License</option>
+              </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
+              <label htmlFor="idDocument" className="block text-sm font-medium text-gray-700">
+                Upload ID Document
               </label>
               <Input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
+                id="idDocument"
+                name="idDocument"
+                type="file"
+                required
+                accept="image/*,.pdf"
                 className="mt-1"
-                placeholder="Choose a password"
               />
             </div>
           </div>
@@ -134,10 +113,10 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C]">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-[#1A1F2C]">Create Account</h2>
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">Create Account</h2>
           <p className="mt-2 text-sm text-gray-600">Step {currentStep} of 3</p>
         </div>
 
@@ -151,10 +130,7 @@ const Register = () => {
           {renderStep()}
 
           <div>
-            <Button 
-              type="submit" 
-              className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
-            >
+            <Button type="submit" className="w-full">
               {currentStep === 3 ? 'Complete Registration' : 'Next'}
             </Button>
           </div>
@@ -165,7 +141,7 @@ const Register = () => {
             Already have an account?{' '}
             <button
               onClick={() => navigate('/auth/login')}
-              className="font-medium text-[#9b87f5] hover:text-[#7E69AB]"
+              className="font-medium text-blue-600 hover:text-blue-500"
             >
               Sign in
             </button>

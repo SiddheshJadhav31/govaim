@@ -1,20 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Gavel, Network, Settings, Menu, LogOut } from 'lucide-react';
+import { LayoutDashboard, Gavel, Network, Settings, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className={`bg-primary text-white transition-all ${collapsed ? 'w-20' : 'w-64'}`}>
-      <div className="p-4 border-b border-nav-hover flex items-center justify-between">
-        {!collapsed && <h1 className="text-xl font-bold text-white">GovAim</h1>}
-        <button 
-          onClick={() => setCollapsed(!collapsed)} 
-          className="p-2 hover:bg-nav-hover rounded-lg transition-colors"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <Menu size={20} className="text-white" />
+    <div className={`bg-white border-r border-gray-200 transition-all ${collapsed ? 'w-20' : 'w-64'}`}>
+      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+        {!collapsed && <h1 className="text-xl font-bold text-primary">GovAim</h1>}
+        <button onClick={() => setCollapsed(!collapsed)} className="p-2 hover:bg-gray-100 rounded-lg">
+          <Menu size={20} />
         </button>
       </div>
       
@@ -36,13 +32,6 @@ const Sidebar = () => {
           {!collapsed && <span>Settings</span>}
         </NavLink>
       </nav>
-
-      <div className="absolute bottom-0 w-full p-4 border-t border-nav-hover">
-        <button className="nav-link w-full justify-center">
-          <LogOut size={20} />
-          {!collapsed && <span>Sign Out</span>}
-        </button>
-      </div>
     </div>
   );
 };

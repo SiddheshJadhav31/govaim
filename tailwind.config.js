@@ -8,29 +8,23 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#4A154B',
-          light: '#611f5d',
-          dark: '#2c0d2d'
+          DEFAULT: '#1a365d',
+          light: '#2a4365',
+          dark: '#102a4c'
         },
         secondary: {
-          DEFAULT: '#36C5F0',
-          light: '#50d4ff',
-          dark: '#2596b8'
+          DEFAULT: '#2c7a7b',
+          light: '#319795',
+          dark: '#285e61'
         },
         accent: {
-          DEFAULT: '#ECB22E',
-          light: '#ffc547',
-          dark: '#d4a01f'
-        },
-        workspace: '#F7F7F8',
-        'nav-hover': 'rgba(255, 255, 255, 0.1)'
+          DEFAULT: '#d4af37',
+          light: '#ecc94b',
+          dark: '#b7791f'
+        }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
-      },
-      boxShadow: {
-        'card': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-        'card-hover': '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)'
+        sans: ['Inter', 'sans-serif']
       }
     },
   },
