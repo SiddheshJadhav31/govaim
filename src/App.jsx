@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import LegislativeTracker from './pages/LegislativeTracker';
 import StakeholderNetwork from './pages/StakeholderNetwork';
+import DataVisualization from './pages/DataVisualization';
 import Landing from './pages/Landing';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -23,7 +24,6 @@ function App() {
 }
 
 function AppLayout() {
-  // This is where we'll add authentication check later
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -32,6 +32,7 @@ function AppLayout() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/legislative" element={<LegislativeTracker />} />
           <Route path="/network" element={<StakeholderNetwork />} />
+          <Route path="/visualization" element={<DataVisualization />} />
         </Routes>
       </main>
     </div>
