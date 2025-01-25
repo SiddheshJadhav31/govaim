@@ -11,8 +11,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
 } from "recharts";
 import { processDataForVisualization } from "../utils/dataProcessing";
 import { Loader2 } from "lucide-react";
@@ -20,15 +18,29 @@ import { Loader2 } from "lucide-react";
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d"];
 
 const Visualization = () => {
-  const { data: rawData, isLoading } = useQuery({
+  const { data: rawData, isLoading, error } = useQuery({
     queryKey: ["titanic-data"],
-    queryFn: () => fetch("/src/data/titanic.json").then((res) => res.json()),
+    queryFn: async () => {
+      const response = await fetch("/src/data/titanic.json");
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return response.json();
+    },
   });
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen text-red-500">
+        Error loading data: {error.message}
       </div>
     );
   }

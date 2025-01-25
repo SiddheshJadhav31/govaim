@@ -1,6 +1,17 @@
 import { TitanicData } from '../types/data';
 
-export const processDataForVisualization = (data: TitanicData[]) => {
+export const processDataForVisualization = (data: TitanicData[] | undefined) => {
+  if (!data || !Array.isArray(data)) {
+    return {
+      passengerClass: [],
+      gender: [],
+      embarked: [],
+      survived: [],
+      age: [],
+      fare: []
+    };
+  }
+
   // Process categorical data (similar to Python's value_counts)
   const processCategoricalData = (key: keyof TitanicData) => {
     const counts: { [key: string]: number } = {};
@@ -13,7 +24,14 @@ export const processDataForVisualization = (data: TitanicData[]) => {
 
   // Process numerical data for histograms
   const processNumericalData = (key: keyof TitanicData) => {
-    const values = data.map(item => Number(item[key])).filter(val => !isNaN(val));
+    const values = data
+      .map(item => Number(item[key]))
+      .filter(val => !isNaN(val));
+      
+    if (values.length === 0) {
+      return [];
+    }
+
     const min = Math.min(...values);
     const max = Math.max(...values);
     const binCount = 10;
