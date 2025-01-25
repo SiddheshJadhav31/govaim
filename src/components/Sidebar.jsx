@@ -1,47 +1,38 @@
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Gavel, 
-  Users, 
-  Settings,
-  BarChart2
-} from 'lucide-react';
+import { LayoutDashboard, Gavel, Network, Settings, Menu } from 'lucide-react';
+import { useState } from 'react';
 
 const Sidebar = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-4">
-      <div className="flex items-center gap-2 mb-8">
-        <img src="/logo.png" alt="Logo" className="w-8 h-8" />
-        <span className="text-xl font-bold text-primary">PolicyFlow</span>
+    <div className={`bg-[#1A1F2C] text-white transition-all ${collapsed ? 'w-20' : 'w-64'}`}>
+      <div className="p-4 border-b border-[#403E43] flex items-center justify-between">
+        {!collapsed && <h1 className="text-xl font-bold text-white">GovAim</h1>}
+        <button onClick={() => setCollapsed(!collapsed)} className="p-2 hover:bg-[#403E43] rounded-lg">
+          <Menu size={20} className="text-white" />
+        </button>
       </div>
       
-      <nav className="space-y-2">
-        <NavLink to="/app" end className="nav-link">
+      <nav className="p-4 space-y-2">
+        <NavLink to="/app" end className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
           <LayoutDashboard size={20} />
-          Dashboard
+          {!collapsed && <span>Dashboard</span>}
         </NavLink>
-        
-        <NavLink to="/app/legislative" className="nav-link">
+        <NavLink to="/app/legislative" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
           <Gavel size={20} />
-          Legislative Tracker
+          {!collapsed && <span>Legislative Tracker</span>}
         </NavLink>
-        
-        <NavLink to="/app/network" className="nav-link">
-          <Users size={20} />
-          Stakeholder Network
+        <NavLink to="/app/network" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
+          <Network size={20} />
+          {!collapsed && <span>Stakeholder Network</span>}
         </NavLink>
-
-        <NavLink to="/app/visualization" className="nav-link">
-          <BarChart2 size={20} />
-          Data Visualization
-        </NavLink>
-        
-        <NavLink to="/app/settings" className="nav-link">
+        <NavLink to="/app/settings" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
           <Settings size={20} />
-          Settings
+          {!collapsed && <span>Settings</span>}
         </NavLink>
       </nav>
-    </aside>
+    </div>
   );
 };
 
