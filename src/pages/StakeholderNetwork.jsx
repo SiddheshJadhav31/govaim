@@ -1,6 +1,24 @@
 import { Search, Filter, UserPlus, Mail, Phone } from 'lucide-react';
+import { useState } from 'react';
 
 const StakeholderNetwork = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredStakeholders, setFilteredStakeholders] = useState(stakeholders);
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    
+    const filtered = stakeholders.filter(stakeholder => 
+      stakeholder.name.toLowerCase().includes(term) ||
+      stakeholder.role.toLowerCase().includes(term) ||
+      stakeholder.organization.toLowerCase().includes(term) ||
+      stakeholder.tags.some(tag => tag.toLowerCase().includes(term))
+    );
+    
+    setFilteredStakeholders(filtered);
+  };
+
   return (
     <div className="space-y-8">
       <header className="flex justify-between items-center">
@@ -23,6 +41,8 @@ const StakeholderNetwork = () => {
                 type="text"
                 placeholder="Search stakeholders..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                value={searchTerm}
+                onChange={handleSearch}
               />
             </div>
             <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
@@ -32,7 +52,7 @@ const StakeholderNetwork = () => {
           </div>
 
           <div className="space-y-4">
-            {stakeholders.map((stakeholder, index) => (
+            {filteredStakeholders.map((stakeholder, index) => (
               <StakeholderCard key={index} {...stakeholder} />
             ))}
           </div>
@@ -42,7 +62,7 @@ const StakeholderNetwork = () => {
           <div className="card">
             <h2 className="text-xl font-semibold mb-4">Network Statistics</h2>
             <div className="space-y-4">
-              <StatItem label="Total Stakeholders" value="156" />
+              <StatItem label="Total Stakeholders" value={stakeholders.length.toString()} />
               <StatItem label="Active Relationships" value="89" />
               <StatItem label="Influence Score" value="7.8/10" />
               <StatItem label="Recent Interactions" value="24" />

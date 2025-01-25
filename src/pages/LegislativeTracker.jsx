@@ -1,6 +1,24 @@
 import { Search, Filter, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
 
 const LegislativeTracker = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBills, setFilteredBills] = useState(bills);
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    
+    const filtered = bills.filter(bill => 
+      bill.title.toLowerCase().includes(term) ||
+      bill.number.toLowerCase().includes(term) ||
+      bill.summary.toLowerCase().includes(term) ||
+      bill.tags.some(tag => tag.toLowerCase().includes(term))
+    );
+    
+    setFilteredBills(filtered);
+  };
+
   return (
     <div className="space-y-8">
       <header className="flex justify-between items-center">
@@ -19,6 +37,8 @@ const LegislativeTracker = () => {
               type="text"
               placeholder="Search bills, committees, or keywords..."
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              value={searchTerm}
+              onChange={handleSearch}
             />
           </div>
           <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
@@ -28,7 +48,7 @@ const LegislativeTracker = () => {
         </div>
 
         <div className="space-y-4">
-          {bills.map((bill, index) => (
+          {filteredBills.map((bill, index) => (
             <BillCard key={index} {...bill} />
           ))}
         </div>
