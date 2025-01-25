@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Gavel, Network, Settings, Menu } from 'lucide-react';
+import { LayoutDashboard, Gavel, Network, Settings, Menu, BarChart2 } from 'lucide-react';
 import { useState } from 'react';
 
 const Sidebar = () => {
@@ -26,6 +26,10 @@ const Sidebar = () => {
         <NavLink to="/app/network" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
           <Network size={20} />
           {!collapsed && <span>Stakeholder Network</span>}
+        </NavLink>
+        <NavLink to="/app/visualization" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
+          <BarChart2 size={20} />
+          {!collapsed && <span>Visualization</span>}
         </NavLink>
         <NavLink to="/app/settings" className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-[#403E43] hover:text-white rounded-lg transition-all">
           <Settings size={20} />
