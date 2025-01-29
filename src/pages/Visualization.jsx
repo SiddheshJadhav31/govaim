@@ -1,57 +1,46 @@
-import { useQuery } from "@tanstack/react-query";
+import { BarChart, PieChart, LineChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  BarChart,
+  BarChart as RechartsBarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
+  PieChart as RechartsPieChart,
   Pie,
   Cell,
 } from "recharts";
-import { processDataForVisualization } from "../utils/dataProcessing";
-import { Loader2 } from "lucide-react";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d"];
+const data = [
+  { name: "First Class", value: 216 },
+  { name: "Second Class", value: 184 },
+  { name: "Third Class", value: 491 },
+];
+
+const survivalData = [
+  { name: "Survived", value: 342 },
+  { name: "Did Not Survive", value: 549 },
+];
+
+const ageData = [
+  { age: "0-10", count: 62 },
+  { age: "11-20", count: 102 },
+  { age: "21-30", count: 223 },
+  { age: "31-40", count: 167 },
+  { age: "41-50", count: 118 },
+  { age: "51+", count: 219 },
+];
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Visualization = () => {
-  const { data: rawData, isLoading, error } = useQuery({
-    queryKey: ["titanic-data"],
-    queryFn: async () => {
-      const response = await fetch("/src/data/titanic.json");
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      return response.json();
-    },
-  });
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen text-red-500">
-        Error loading data: {error.message}
-      </div>
-    );
-  }
-
-  const visualData = processDataForVisualization(rawData);
-
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Advanced Data Visualization</h1>
+          <h1 className="text-3xl font-bold">Data Visualization</h1>
           <p className="text-muted-foreground mt-1">
             Interactive visualizations of the Titanic dataset
           </p>
@@ -62,18 +51,21 @@ const Visualization = () => {
         {/* Passenger Class Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Passenger Class Distribution</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart className="h-5 w-5" />
+              Passenger Class Distribution
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={visualData.passengerClass}>
+                <RechartsBarChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="value" fill="#0088FE" />
-                </BarChart>
+                </RechartsBarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
@@ -82,71 +74,17 @@ const Visualization = () => {
         {/* Survival Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Survival Distribution</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <PieChart className="h-5 w-5" />
+              Survival Distribution
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <RechartsPieChart>
                   <Pie
-                    data={visualData.survived}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name === "0" ? "Did Not Survive" : "Survived"} (${(
-                        percent * 100
-                      ).toFixed(0)}%)`
-                    }
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {visualData.survived.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Age Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Age Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={visualData.age}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="range" angle={-45} textAnchor="end" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#00C49F" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Gender Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Gender Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={visualData.gender}
+                    data={survivalData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -157,7 +95,7 @@ const Visualization = () => {
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {visualData.gender.map((entry, index) => (
+                    {survivalData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
@@ -165,7 +103,30 @@ const Visualization = () => {
                     ))}
                   </Pie>
                   <Tooltip />
-                </PieChart>
+                </RechartsPieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Age Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <LineChart className="h-5 w-5" />
+              Age Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsBarChart data={ageData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="age" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#00C49F" />
+                </RechartsBarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
