@@ -1,112 +1,194 @@
-import { BarChart, Activity, Users, FileText } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import Papa from "papaparse";
+import { ResponsiveBar } from "@nivo/bar";
+import { ResponsivePie } from "@nivo/pie";
+import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
 const Dashboard = () => {
+  const [visualizations, setVisualizations] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("/response.json")
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("Visualizations Loaded:", json.visualizations);
+        setVisualizations(json.visualizations);
+      });
+  }, []);
+
+  useEffect(() => {
+    Papa.parse("/titanic.csv", {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: (result) => setData(result.data),
+    });
+  }, []);
+
+  const renderVisualization = (viz) => {
+    switch (viz.type) {
+      case "Bar Chart":
+        return <BarVisualization data={data} xColumn={viz.x_column} yColumn={viz.y_column} />;
+      case "Pie Chart":
+        return <PieVisualization data={data} xColumn={viz.x_column} />;
+      case "Scatter Plot":
+        return <ScatterVisualization data={data} xColumn={viz.x_column} yColumn={viz.y_column} />;
+      case "Histogram":
+        return <HistogramVisualization data={data} xColumn={viz.x_column} />;
+      case "Box Plot":
+        return <BoxPlotVisualization data={data} xColumn={viz.x_column} yColumn={viz.y_column} />;
+      default:
+        return <p>Unsupported visualization type: {viz.type}</p>;
+    }
+  };
+
   return (
     <div className="space-y-8">
       <header>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back! Here's your legislative overview.</p>
+        <p className="text-gray-600 mt-2">Visualizing data dynamically</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          icon={<BarChart className="text-blue-500" />}
-          title="Active Bills"
-          value="127"
-          trend="+12%"
-        />
-        <StatCard
-          icon={<Activity className="text-green-500" />}
-          title="Success Rate"
-          value="68%"
-          trend="+5%"
-        />
-        <StatCard
-          icon={<Users className="text-purple-500" />}
-          title="Key Stakeholders"
-          value="45"
-          trend="+3"
-        />
-        <StatCard
-          icon={<FileText className="text-orange-500" />}
-          title="Reports"
-          value="12"
-          trend="+2"
-        />
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
-          <div className="space-y-4">
-            {activities.map((activity, index) => (
-              <ActivityItem key={index} {...activity} />
-            ))}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {visualizations.map((viz, index) => (
+          <div key={index} className="card p-4 shadow-lg rounded-lg bg-white">
+            <h2 className="text-lg font-semibold mb-4">{viz.type}</h2>
+            {renderVisualization(viz)}
           </div>
-        </div>
-
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Upcoming Deadlines</h2>
-          <div className="space-y-4">
-            {deadlines.map((deadline, index) => (
-              <DeadlineItem key={index} {...deadline} />
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
 
-const StatCard = ({ icon, title, value, trend }) => (
-  <div className="card">
-    <div className="flex items-start justify-between">
-      <div>
-        <p className="text-gray-600 mb-1">{title}</p>
-        <h3 className="text-2xl font-bold">{value}</h3>
-      </div>
-      <div className="p-2 bg-gray-50 rounded-lg">{icon}</div>
-    </div>
-    <p className="text-sm text-green-600 mt-2">{trend} from last month</p>
+
+const BarVisualization = ({ data, xColumn, yColumn }) => (
+  <div style={{ height: 300 }}>
+    <ResponsiveBar
+      data={data}
+      keys={[yColumn]}
+      indexBy={xColumn}
+      margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
+      padding={0.4} 
+      colors={{ scheme: "nivo" }}
+      axisBottom={{ tickRotation: -45 }}
+    />
   </div>
 );
 
-const ActivityItem = ({ title, time, type }) => (
-  <div className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg">
-    <div className="w-2 h-2 rounded-full bg-blue-500" />
-    <div>
-      <p className="font-medium">{title}</p>
-      <p className="text-sm text-gray-600">{time}</p>
+
+const PieVisualization = ({ data, xColumn }) => {
+  const pieData = data.reduce((acc, row) => {
+    const existing = acc.find((item) => item.id === row[xColumn]);
+    if (existing) existing.value += 1;
+    else acc.push({ id: row[xColumn], value: 1 });
+    return acc;
+  }, []);
+
+  return (
+    <div style={{ height: 300 }}>
+      <ResponsivePie
+        data={pieData}
+        margin={{ top: 20, right: 20, bottom: 50, left: 20 }}
+        colors={{ scheme: "nivo" }}
+        innerRadius={0.5}
+        padAngle={0.7}
+        cornerRadius={3}
+      />
     </div>
-    <span className="ml-auto text-sm text-gray-500">{type}</span>
-  </div>
-);
+  );
+};
 
-const DeadlineItem = ({ title, date, status }) => (
-  <div className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg">
-    <div className="w-2 h-2 rounded-full bg-red-500" />
-    <div>
-      <p className="font-medium">{title}</p>
-      <p className="text-sm text-gray-600">{date}</p>
+
+const ScatterVisualization = ({ data, xColumn, yColumn }) => {
+  if (!data || data.length === 0) return <p>No data available</p>;
+
+  return (
+    <div style={{ height: 300 }}>
+      <ResponsiveScatterPlot
+        data={[
+          {
+            id: "Data",
+            data: data.map((row) => ({
+              x: row[xColumn],
+              y: row[yColumn],
+            })),
+          },
+        ]}
+        margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
+        xScale={{ type: "linear" }}
+        yScale={{ type: "linear" }}
+        colors={{ scheme: "category10" }}
+      />
     </div>
-    <span className={`ml-auto text-sm px-2 py-1 rounded ${
-      status === 'Urgent' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'
-    }`}>
-      {status}
-    </span>
-  </div>
-);
+  );
+};
 
-const activities = [
-  { title: "Bill H.R. 123 Status Update", time: "2 hours ago", type: "Update" },
-  { title: "New Stakeholder Added", time: "4 hours ago", type: "Network" },
-  { title: "Committee Hearing Scheduled", time: "6 hours ago", type: "Event" },
-];
 
-const deadlines = [
-  { title: "Submit Committee Testimony", date: "Tomorrow, 9:00 AM", status: "Urgent" },
-  { title: "Bill Amendment Review", date: "In 2 days", status: "Upcoming" },
-  { title: "Stakeholder Meeting", date: "Next week", status: "Planned" },
-];
+const HistogramVisualization = ({ data, xColumn }) => {
+  const histogramData = data.reduce((acc, row) => {
+    acc[row[xColumn]] = (acc[row[xColumn]] || 0) + 1;
+    return acc;
+  }, {});
+
+  const formattedData = Object.entries(histogramData).map(([key, value]) => ({
+    id: key,
+    value,
+  }));
+
+  return (
+    <div style={{ height: 300 }}>
+      <ResponsiveBar
+        data={formattedData}
+        keys={["value"]}
+        indexBy="id"
+        margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
+        padding={0.6}
+        colors={{ scheme: "nivo" }}
+      />
+    </div>
+  );
+};
+
+const BoxPlotVisualization = ({ data, xColumn, yColumn }) => {
+  if (!data || data.length === 0) return <p>No data available</p>;
+
+  const groupedData = data.reduce((acc, row) => {
+    if (row[xColumn] && typeof row[yColumn] === "number") {
+      if (!acc[row[xColumn]]) acc[row[xColumn]] = [];
+      acc[row[xColumn]].push(row[yColumn]);
+    }
+    return acc;
+  }, {});
+
+  const boxPlotData = Object.keys(groupedData).map((key) => {
+    const values = groupedData[key].sort((a, b) => a - b);
+    const q1 = values[Math.floor(values.length * 0.25)];
+    const median = values[Math.floor(values.length * 0.5)];
+    const q3 = values[Math.floor(values.length * 0.75)];
+    return {
+      id: key,
+      min: values[0],
+      q1,
+      median,
+      q3,
+      max: values[values.length - 1],
+    };
+  });
+
+  return (
+    <div style={{ height: 300 }}>
+      <ResponsiveBar
+        data={boxPlotData}
+        keys={["min", "q1", "median", "q3", "max"]}
+        indexBy="id"
+        margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
+        padding={0.5}
+        colors={{ scheme: "nivo" }}
+      />
+    </div>
+  );
+};
 
 export default Dashboard;
